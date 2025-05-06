@@ -37,14 +37,15 @@ namespace SnakeGame.Domain.Entities
 
         public override bool Equals(object? obj)
         {
-            return obj is Position position && 
+            return obj is Position position &&
                    X == position.X &&
                    Y == position.Y;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(X, Y);
+            // Alternative implementation without using HashCode.Combine
+            return (X * 397) ^ Y;
         }
 
         public override string ToString()
