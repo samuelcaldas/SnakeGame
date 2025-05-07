@@ -1,4 +1,4 @@
-using SnakeGame.Application;
+﻿using SnakeGame.Application;
 using SnakeGame.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -20,19 +20,22 @@ namespace SnakeGame.Infrastructure
     public class ConsoleRenderer : IRenderer
     {
         private readonly char _wallChar;
+        private readonly char _horizontalChar;
         private readonly char _snakeHeadChar;
         private readonly char _snakeBodyChar;
         private readonly char _foodChar;
         private readonly char _emptyChar;
-        
+
         public ConsoleRenderer(
-            char wallChar = '#',
-            char snakeHeadChar = 'O',
-            char snakeBodyChar = 'o',
-            char foodChar = 'F',
+            char wallChar = '║',
+            char horizontalChar = '═',
+            char snakeHeadChar = '@',
+            char snakeBodyChar = '■',
+            char foodChar = '*',
             char emptyChar = ' ')
         {
             _wallChar = wallChar;
+            _horizontalChar = horizontalChar;
             _snakeHeadChar = snakeHeadChar;
             _snakeBodyChar = snakeBodyChar;
             _foodChar = foodChar;
@@ -42,23 +45,23 @@ namespace SnakeGame.Infrastructure
         public void Render(GameState state)
         {
             Console.Clear();
-            
+
             // Render top border
-            Console.WriteLine(new string(_wallChar, state.BoardWidth + 2));
-            
+            Console.WriteLine("╔" + new string(_horizontalChar, state.BoardWidth) + "╗");
+
             // Get snake body positions for quick lookup
             var snakeBody = state.Snake.GetBody().ToList();
             var headPosition = snakeBody.First();
-            
+
             // Render game board
             for (int y = 0; y < state.BoardHeight; y++)
             {
                 Console.Write(_wallChar); // Left border
-                
+
                 for (int x = 0; x < state.BoardWidth; x++)
                 {
                     var position = new Position(x, y);
-                    
+
                     if (position.Equals(headPosition))
                     {
                         Console.Write(_snakeHeadChar);
@@ -76,16 +79,16 @@ namespace SnakeGame.Infrastructure
                         Console.Write(_emptyChar);
                     }
                 }
-                
+
                 Console.WriteLine(_wallChar); // Right border
             }
-            
+
             // Render bottom border
-            Console.WriteLine(new string(_wallChar, state.BoardWidth + 2));
-            
+            Console.WriteLine("╚" + new string(_horizontalChar, state.BoardWidth) + "╝");
+
             // Render score and game status
             Console.WriteLine($"Score: {state.Score}");
-            
+
             if (state.IsGameOver)
             {
                 Console.WriteLine("Game Over!");
